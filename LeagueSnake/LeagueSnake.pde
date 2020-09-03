@@ -36,8 +36,8 @@ int foodEaten = 0;
 
 void setup() {
   size(500, 500);
-  head = new Segment(10, 10);
-   frameRate(20);
+  head = new Segment(250, 250);
+   frameRate(10);
    dropFood();
 }
 
@@ -58,13 +58,14 @@ void dropFood() {
 void draw() {
   background(#1D616A);
   drawFood();
+  move();
   drawSnake();
 }
 
 void drawFood() {
   //Draw the food
   fill(#F70213);
-  rect(head.x, head.y, 10, 10);
+  rect(foodX, foodY, 10, 10);
 }
 
 void drawSnake() {
@@ -104,37 +105,61 @@ void checkTailCollision() {
 
 void keyPressed() {
   //Set the direction of the snake according to the arrow keys pressed
-  
+   if (key == CODED) {
+    if (keyCode == UP && direction != DOWN) {
+      direction = UP;
+    } else if (keyCode == DOWN && direction != UP) {
+      direction = DOWN;
+    } 
+    else if (keyCode == LEFT && direction != RIGHT) {
+      direction = LEFT;
+    } else if (keyCode == RIGHT && direction != LEFT) {
+      direction = RIGHT;
+    }
+  }
 }
 
 void move() {
   //Change the location of the Snake head based on the direction it is moving.
   switch(direction) {
   case UP:
-    head.x += 10;
-    head.y += 10;
-    break;
-  case DOWN:
-    head.x -= 10;
     head.y -= 10;
     break;
+  case DOWN:
+    head.y += 10;
+    break;
   case LEFT:
-   
+   head.x -= 10;
     break;
   case RIGHT:
-    // mystery code goes here 
+    head.x += 10;
     break;
   }
+  checkBoundaries();
 }
 
 void checkBoundaries() {
  //If the snake leaves the frame, make it reappear on the other side
- 
+ if (head.x >= 500) {
+   head.x = 0;
+ }
+ else if (head.x <= 0) {
+   head.x = 500;
+ }
+ else if (head.y >= 500) {
+   head.y = 0;
+ }
+ else if (head.y <= 0) {
+   head.y = 500;
+ }
 }
 
 
 
 void eat() {
   //When the snake eats the food, its tail should grow and more food appear
-
+if (head.x == foodX && head.y == foodY) {
+  foodEaten ++;
+  dropFood();
+}
 }
